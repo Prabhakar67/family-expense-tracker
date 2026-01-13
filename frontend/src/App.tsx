@@ -5,6 +5,9 @@ import { gql } from "@apollo/client";
 type ExpensesResult = {
   expenses: Expense[];
 }
+type TotalExpenseResult = {
+  totalExpense: number;
+}
 type Expense = {
   id: string;
   name: string;
@@ -14,7 +17,7 @@ type Expense = {
 };
 
 const ADD_EXPENSE = gql`
-  mutation Add($input: AddExpenseInput!){
+  mutation Add($input: AddExpenseInput!) {
   addExpense(input: $input) {
   id
   name
@@ -23,6 +26,7 @@ const ADD_EXPENSE = gql`
   }
   }
   `;
+
 const LIST_EXPENSES = gql`
   query {
   expenses {
@@ -34,13 +38,25 @@ const LIST_EXPENSES = gql`
   }
   }
   `;
+  
+const DELETE_EXPENSE = gql`
+  mutation DeleteExpense($id: ID!) {
+  deleteExpense(id: $id)
+  }
+  `;
 
+const TOTAL_EXPENSES = gql`
+query {
+totalExpense
+}
+`;
 
 export default function App() {
 
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const [total, setTotal] = useState(0);
 
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [log, setLog] = useState<any>(null);
@@ -60,9 +76,27 @@ export default function App() {
     setLog(result.data);
 
     await loadExpenses();
+    await handleTotalExpenses();
     setName("");
     setAmount("");
     setDescription("");
+  }
+
+  async function handleDelete(id: string) {
+    await client.mutate({
+      mutation: DELETE_EXPENSE,
+      variables: { id }
+    });
+    await loadExpenses();
+    await handleTotalExpenses();
+  }
+
+  async function handleTotalExpenses() {
+    const result = await client.query<TotalExpenseResult>({
+      query: TOTAL_EXPENSES,
+      fetchPolicy: "network-only",
+    });
+    setTotal(result.data?.totalExpense ?? 0)
   }
 
   async function loadExpenses() {
@@ -75,6 +109,7 @@ export default function App() {
 
   useEffect(() => {
     loadExpenses();
+    handleTotalExpenses();
   }, [])
 
   return (
@@ -109,9 +144,11 @@ export default function App() {
         {expenses.map((e) => (
           <li key={e.id}>
             {e.name} - ₹{e.amount}
+            <button onClick={() => handleDelete(e.id)}>Delete</button>
           </li>
         ))}
       </ul>
+      <div>Total Expense {total}</div>
 
       <pre>{log ? JSON.stringify(log, null, 2) : ""}</pre>
     </div>
