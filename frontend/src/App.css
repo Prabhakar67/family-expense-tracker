@@ -1,42 +1,198 @@
-#root {
-  max-width: 1280px;
+/* ---------------- RESET & BASE ---------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #f6f7f9;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #222;
+}
+
+/* ---------------- APP CONTAINER ---------------- */
+.app-container {
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 20px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+input {
+  margin: 10px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+button {
+  margin: 10px;
+}
+
+/* ---------------- HEADINGS ---------------- */
+h1 {
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* ---------------- SECTIONS ---------------- */
+section {
+  background: #fff;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------------- INPUTS ---------------- */
+input[type="text"],
+input[type="number"],
+input[type="month"] {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  max-width: 240px;
+}
+
+input[type="radio"] {
+  margin-right: 6px;
+}
+
+/* spacing between inputs */
+.form-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---------------- BUTTONS ---------------- */
+button {
+  padding: 8px 14px;
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #155fa0;
+}
+
+button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+/* small action buttons */
+.btn-small {
+  padding: 4px 8px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+.btn-danger {
+  background-color: #d32f2f;
+}
+
+.btn-danger:hover {
+  background-color: #b71c1c;
+}
+
+/* ---------------- USERS LIST ---------------- */
+.user-list label {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.user-list label:hover {
+  background-color: #f1f1f1;
+}
+
+.user-list .active {
+  background-color: #e3f2fd;
+  font-weight: bold;
+}
+
+/* ---------------- EXPENSE LIST ---------------- */
+.expense-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.expense-list li {
+  padding: 8px 6px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.expense-info {
+  flex: 1;
+}
+
+.expense-actions {
+  white-space: nowrap;
+}
+
+/* ---------------- WARNING ---------------- */
+.warning {
+  color: #d32f2f;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+/* ---------------- MONTHLY SUMMARY ---------------- */
+.summary {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 600px) {
+  .app-container {
+    padding: 12px;
   }
-  to {
-    transform: rotate(360deg);
+
+  h1 {
+    font-size: 22px;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  section {
+    padding: 12px;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .form-row {
+    flex-direction: column;
+  }
 
-.read-the-docs {
-  color: #888;
+  input[type="text"],
+  input[type="number"],
+  input[type="month"] {
+    max-width: 100%;
+  }
+
+  .expense-list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .expense-actions {
+    margin-top: 4px;
+  }
 }
