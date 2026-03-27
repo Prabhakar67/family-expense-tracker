@@ -1,48 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -55,7 +10,7 @@ import pool from "./db";
 const app = express();
 const PORT = 4000;
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: "http://localhost:5174", credentials: true }));
 app.use(express.json());
 
 const schema = buildSchema(`
@@ -127,10 +82,9 @@ const root = {
         );
         if (exists.rows.length) throw new Error("User already exists");
 
-        const id = Date.now().toString();
         const r = await pool.query(
-            "INSERT INTO users (id,name) VALUES ($1,$2) RETURNING *",
-            [id, name]
+            "INSERT INTO users (name) VALUES ($1) RETURNING *",
+            [name]
         );
         return r.rows[0];
     },
@@ -152,15 +106,13 @@ const root = {
     },
 
     addExpense: async ({ input }: any) => {
-        const id = Date.now().toString();
 
         const r = await pool.query(
             `INSERT INTO expenses
-      (id,user_id,name,amount,description,created_at)
-      VALUES ($1,$2,$3,$4,$5,$6)
+        (user_id,name,amount,description,created_at)
+      VALUES ($1,$2,$3,$4,$5)
       RETURNING *`,
             [
-                id,
                 input.userId,
                 input.name,
                 input.amount,
