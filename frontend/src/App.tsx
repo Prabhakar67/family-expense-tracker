@@ -80,6 +80,26 @@ const GET_USERS = gql`
   }
 `;
 
+const GET_DASHBOARD_DATA = gql`
+  query GetDashboardData($userId: ID!, $month: String!) {
+    expensesByUser(userId: $userId) {
+      id
+      name
+      amount
+      description
+      createdAt
+    }
+
+    monthlySummary(userId: $userId, month: $month) {
+      total
+    }
+
+    totalMonthlyExpenses(month: $month) {
+      total
+    }
+  }
+`;
+
 const GET_EXPENSES_BY_USER = gql`
   query ExpensesByUser($userId: ID!) {
     expensesByUser(userId: $userId) {
@@ -255,6 +275,22 @@ export default function App(): JSX.Element {
     setNewUserName("");
   }
 
+  async function loadDashboard(userId: string, month: string) {
+    if (!userId || !month) return;
+
+    const res = await client.query({
+      query: GET_DASHBOARD_DATA,
+      variables: { userId, month },
+      fetchPolicy: "no-cache",
+    });
+
+    const data = res.data as any;
+
+    setExpenses(data.expensesByUser);
+    setMonthlyTotal(data.monthlySummary.total);
+    setAllUsersMonthlyTotal(data.totalMonthlyExpenses.total);
+  }
+
   async function submitExpense(): Promise<void> {
     if (!activeUserId) return;
 
@@ -288,9 +324,8 @@ export default function App(): JSX.Element {
     setAmount("");
     setDescription("");
 
-    await loadExpenses(activeUserId);
-    await loadMonthlySummary(activeUserId, month);
-    await loadAllUsersMonthlyTotal(month);
+    // 🔥 single call instead of 3
+    await loadDashboard(activeUserId, month);
   }
 
   async function deleteExpense(id: string): Promise<void> {
@@ -300,9 +335,8 @@ export default function App(): JSX.Element {
     });
 
     if (activeUserId) {
-      await loadExpenses(activeUserId);
-      await loadMonthlySummary(activeUserId, month);
-      await loadAllUsersMonthlyTotal(month);
+      await loadDashboard(activeUserId, month);
+
     }
   }
 
